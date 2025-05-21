@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getEmployeeById } from "@/lib/actions/employee-actions";
-import { EmployeeForm } from "@/components/employees/employee-form";
+import { EmployeeEditWrapper } from "@/components/employees/employee-edit-wrapper";
 
 export const metadata: Metadata = {
   title: "Edit Employee | Blurr HR Portal",
@@ -16,8 +16,7 @@ interface EditEmployeePageProps {
 }
 
 export default async function EditEmployeePage({ params }: EditEmployeePageProps) {
-  // Await params before accessing its properties
-  const id = await params.id;
+  const id = params.id;
   
   const { employee } = await getEmployeeById(id).catch(() => ({ employee: null }));
 
@@ -35,7 +34,7 @@ export default async function EditEmployeePage({ params }: EditEmployeePageProps
       </div>
 
       <div className="border rounded-lg p-6 bg-card">
-        <EmployeeForm employee={employee} />
+        <EmployeeEditWrapper employee={employee} />
       </div>
     </div>
   );

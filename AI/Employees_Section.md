@@ -1,4 +1,5 @@
 # Update Project Plan: Remove Auth Tasks
+_Exported on 5/22/2025 at 00:53:42 GMT+3 from Cursor (0.50.5)_
 
 ---
 
@@ -9880,4 +9881,166 @@ The next phase in your PROJECT_PLAN would be "Phase 2: Project Management" which
 4. Backlog view with filtering and sorting
 
 Would you like to begin working on Phase 2 now, or would you like to make any additional refinements to Phase 1?
+
+---
+
+**User**
+
+Edit employee don't work 
+
+---
+
+**Cursor**
+
+Let's look at the edit employee functionality to find out why it's not working:
+
+I see the issue. The Edit Employee page is using the `EmployeeForm` directly without providing an `onSubmit` handler. We need to create an `EditEmployeeWrapper` component similar to how we implemented the `EmployeeFormWrapper` for new employees. Let's fix this:
+
+```typescriptreact
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { EmployeeForm } from './employee-form';
+import { updateEmployee } from '@/lib/actions/employee-actions';
+import { EmployeeFormValues } from '@/types/employee';
+import { Employee } from '@/types/employee';
+
+interface EmployeeEditWrapperProps {
+  employee: Employee;
+}
+
+export function EmployeeEditWrapper({ employee }: EmployeeEditWrapperProps) {
+  const router = useRouter();
+
+  const handleSubmit = async (data: EmployeeFormValues) => {
+    try {
+      await updateEmployee(employee.id, data);
+      
+      // Show success toast
+      toast.success("Employee updated successfully", {
+        description: `${data.name}'s information has been updated.`,
+      });
+      
+      // Redirect back to employee details
+      router.push(`/dashboard/employees/${employee.id}`);
+    } catch (error) {
+      console.error('Error updating employee:', error);
+      toast.error("Failed to update employee", {
+        description: error instanceof Error ? error.message : "Please try again later.",
+      });
+    }
+  };
+
+  return <EmployeeForm employee={employee} onSubmit={handleSubmit} />;
+}
+```
+
+Now let's update the edit page to use our new wrapper component:
+
+```typescriptreact
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import { getEmployeeById } from "@/lib/actions/employee-actions";
+import { EmployeeEditWrapper } from "@/components/employees/employee-edit-wrapper";
+
+export const metadata: Metadata = {
+  title: "Edit Employee | Blurr HR Portal",
+  description: "Update employee information",
+};
+
+interface EditEmployeePageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function EditEmployeePage({ params }: EditEmployeePageProps) {
+  const id = params.id;
+  
+  const { employee } = await getEmployeeById(id).catch(() => ({ employee: null }));
+
+  if (!employee) {
+    notFound();
+  }
+
+  return (
+    <div className="container p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Edit Employee</h1>
+        <p className="text-muted-foreground">
+          Update employee information below.
+        </p>
+      </div>
+
+      <div className="border rounded-lg p-6 bg-card">
+        <EmployeeEditWrapper employee={employee} />
+      </div>
+    </div>
+  );
+}
+```
+
+Let's make sure the employee id is properly handled in the component:
+
+The update functionality looks good, but we should make sure the joiningDate is properly handled in the updateEmployee action similar to how we handle it in createEmployee. Let's update that:
+
+```typescript
+export async function updateEmployee(id: string, data: EmployeeFormValues) {
+  try {
+    console.log("Update employee received data:", {
+      id,
+      employeeId: data.employeeId,
+      name: data.name,
+      joiningDate: data.joiningDate instanceof Date ? 'Date object' : typeof data.joiningDate,
+      basicSalary: data.basicSalary
+    });
+    
+    // Ensure joiningDate is a Date object
+    const joiningDate = data.joiningDate instanceof Date 
+      ? data.joiningDate 
+      : new Date(data.joiningDate);
+    
+    const employee = await db.employee.update({
+      where: { id },
+      data: {
+        employeeId: data.employeeId,
+        name: data.name,
+        joiningDate,
+        basicSalary: data.basicSalary,
+      },
+    });
+    
+    revalidatePath(`/dashboard/employees/${id}`);
+    revalidatePath("/dashboard/employees");
+    return { employee };
+  } catch (error) {
+    console.error(`Failed to update employee with ID ${id}:`, error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to update employee: ${error.message}`);
+    }
+    throw new Error("Failed to update employee: Unknown error");
+  }
+}
+```
+
+The Edit Employee functionality should now work correctly! Here's what I've fixed:
+
+1. Created an `EmployeeEditWrapper` component that:
+   - Handles the submission of the employee form
+   - Calls the `updateEmployee` server action with the employee ID
+   - Shows appropriate toast notifications
+   - Redirects back to the employee details page after successful update
+
+2. Updated the edit employee page to:
+   - Use the new `EmployeeEditWrapper` component instead of the bare EmployeeForm
+   - Pass the employee data to the wrapper component
+
+3. Enhanced the `updateEmployee` server action to:
+   - Properly handle the joiningDate conversion from string to Date object
+   - Provide better error messaging with details
+   - Add debugging logs to help troubleshoot any issues
+
+These changes should fix the edit employee functionality. The form will now properly submit the data to the server, update the employee record, and redirect back to the employee details page with a success message.
 
