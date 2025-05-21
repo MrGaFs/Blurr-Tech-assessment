@@ -30,6 +30,7 @@ This repository contains a full-stack Next.js application built as a technical a
 
 3. Set up environment variables:
    Create a `.env` file in the root directory with the following content:
+
    ```
    DATABASE_URL="file:./dev.db"
    NEXTAUTH_SECRET="your-secret-key-here"
