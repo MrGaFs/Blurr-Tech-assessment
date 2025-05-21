@@ -37,31 +37,18 @@ model Employee {
   name          String
   joiningDate   DateTime
   basicSalary   Float
-  organizationId String
-  organization  Organization @relation(fields: [organizationId], references: [id])
   tasks         Task[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-}
-
-model Organization {
-  id        String     @id @default(cuid())
-  name      String
-  employees Employee[]
-  projects  Project[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
 }
 
 model Project {
-  id            String    @id @default(cuid())
-  name          String
-  description   String?
-  organizationId String
-  organization  Organization @relation(fields: [organizationId], references: [id])
-  tasks         Task[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  name         String
+  description  String?
+  tasks        Task[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Task {
@@ -108,12 +95,7 @@ enum TaskStatus {
 
 ## 3. Implementation Plan
 
-### Phase 1: Authentication & Base Setup
-1. Set up NextAuth.js with email/password authentication
-2. Create protected routes and authentication middleware
-3. Implement user registration and login flows
-
-### Phase 2: Employee Management
+### Phase 1: Employee Management
 1. Create employee CRUD operations
 2. Implement employee list view with search and filters
 3. Build employee detail view
@@ -121,8 +103,14 @@ enum TaskStatus {
    - Monthly salary calculation
    - Bonus and deduction management
    - Salary history view
+5. Implement SalaryTable component
+   - Month-based filtering interface
+   - Employee salary data display
+   - Interactive bonus and deduction adjustments
+   - Real-time calculation of final payable amounts
+   - Bulk salary record generation
 
-### Phase 3: Project Management
+### Phase 2: Project Management
 1. Project CRUD operations
 2. Task management system
    - Task creation and assignment
@@ -130,7 +118,7 @@ enum TaskStatus {
 3. Kanban board implementation
 4. Backlog view with filtering and sorting
 
-### Phase 4: AI Chatbot Integration
+### Phase 3: AI Chatbot Integration
 1. Set up AI chat interface
 2. Implement context-aware responses
 3. Add task and project querying capabilities
@@ -139,9 +127,6 @@ enum TaskStatus {
 ```
 src/
 ├── app/
-│   ├── (auth)/
-│   │   ├── login/
-│   │   └── register/
 │   ├── dashboard/
 │   │   ├── employees/
 │   │   ├── projects/
@@ -166,6 +151,10 @@ src/
 - Salary calculation system
 - Employee search and filtering
 - Salary history tracking
+- Comprehensive salary table with month-based filtering
+- Interactive salary management interface with real-time bonus/deduction adjustments
+- Automatic calculation of final payable amount based on basic salary, bonuses, and deductions
+- Bulk salary processing capabilities
 
 ### 5.2 Project Management
 - Project creation and management
@@ -194,7 +183,6 @@ src/
 - Input validation and sanitization
 - CSRF protection
 - Rate limiting
-- Secure password handling
 - Role-based access control
 
 ## 9. Deployment Strategy

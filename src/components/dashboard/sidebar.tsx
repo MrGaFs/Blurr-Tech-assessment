@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Settings, LogOut, Folders } from "lucide-react";
+import { LayoutDashboard, Users, Settings, LogOut, Folders, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -54,6 +54,12 @@ export function DashboardSidebar() {
               href="/dashboard/projects"
               icon={<Folders className="h-4 w-4" />}
               title="Projects"
+            />
+
+            <SidebarNavItem
+              href="/dashboard/salary"
+              icon={<DollarSign className="h-4 w-4" />}
+              title="Salary"
             />
 
             <div className="mt-4 text-xs font-medium uppercase text-muted-foreground">Settings</div>

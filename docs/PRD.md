@@ -28,7 +28,7 @@ The Blurr HR Portal is a comprehensive human resource management system designed
 - System administrator registration and login
 - Secure session management
 - Password recovery system
-- Single admin access (one admin per organization)
+- Single admin access
 
 ### 3.2 Employee Management
 #### 3.2.1 Employee Information
@@ -46,6 +46,10 @@ The Blurr HR Portal is a comprehensive human resource management system designed
 - Deduction tracking
 - Salary history
 - Export functionality
+- Comprehensive salary table displaying all employees and their salary details
+- Month selection to generate period-specific salary records
+- Real-time bonus and deduction adjustments with automatic total calculation
+- Bulk salary processing
 
 ### 3.3 Project Management
 #### 3.3.1 Project Features
