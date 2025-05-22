@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LayoutDashboard, Users, Settings, LogOut, Folders, DollarSign } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Settings, Folders, DollarSign } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { signOut } from "next-auth/react";
 
 // Mobile-specific sidebar nav item
 function MobileSidebarNavItem({ 
@@ -89,20 +88,6 @@ function MobileSidebarContent({ onNavigate }: { onNavigate: () => void }) {
             />
           </div>
         </ScrollArea>
-
-        <div className="border-t p-4">
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2"
-            onClick={() => {
-              onNavigate();
-              signOut({ callbackUrl: "/" });
-            }}
-          >
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </Button>
-        </div>
       </div>
     </div>
   );

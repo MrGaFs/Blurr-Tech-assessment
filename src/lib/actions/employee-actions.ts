@@ -75,12 +75,25 @@ export async function createEmployee(data: EmployeeFormValues) {
 
 export async function updateEmployee(id: string, data: EmployeeFormValues) {
   try {
+    console.log("Update employee received data:", {
+      id,
+      employeeId: data.employeeId,
+      name: data.name,
+      joiningDate: data.joiningDate instanceof Date ? 'Date object' : typeof data.joiningDate,
+      basicSalary: data.basicSalary
+    });
+    
+    // Ensure joiningDate is a Date object
+    const joiningDate = data.joiningDate instanceof Date 
+      ? data.joiningDate 
+      : new Date(data.joiningDate);
+    
     const employee = await db.employee.update({
       where: { id },
       data: {
         employeeId: data.employeeId,
         name: data.name,
-        joiningDate: data.joiningDate,
+        joiningDate,
         basicSalary: data.basicSalary,
       },
     });
@@ -90,7 +103,10 @@ export async function updateEmployee(id: string, data: EmployeeFormValues) {
     return { employee };
   } catch (error) {
     console.error(`Failed to update employee with ID ${id}:`, error);
-    throw new Error("Failed to update employee");
+    if (error instanceof Error) {
+      throw new Error(`Failed to update employee: ${error.message}`);
+    }
+    throw new Error("Failed to update employee: Unknown error");
   }
 }
 

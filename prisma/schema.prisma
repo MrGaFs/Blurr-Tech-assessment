@@ -91,6 +91,11 @@ model Task {
   projectId   String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  @@index([priority])
+  @@index([status])
+  @@index([employeeId])
+  @@index([projectId])
 }
 
 model SalaryRecord {

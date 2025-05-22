@@ -45,11 +45,19 @@ export type TaskFormValues = z.infer<typeof taskSchema>;
 export type Task = {
   id: string;
   title: string;
-  description?: string;
+  description?: string | null;
   priority: Priority;
   status: TaskStatus;
   employeeId?: string;
   projectId: string;
   createdAt: Date;
   updatedAt: Date;
+  assignedTo?: {
+    id: string;
+    name: string;
+  } | null;
+  project?: {
+    id: string;
+    name: string;
+  };
 }; 

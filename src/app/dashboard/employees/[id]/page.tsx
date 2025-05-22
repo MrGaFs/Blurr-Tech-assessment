@@ -19,7 +19,6 @@ interface EmployeePageProps {
 export default async function EmployeePage(
    {params} :  {params: Promise<EmployeePageProps>} ) {
   const  id  = (await params).id;
-  console.log(id);
   const { employee } = await getEmployeeById(id).catch(() => {
     return { employee: null };
   });

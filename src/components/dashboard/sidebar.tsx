@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Settings, LogOut, Folders, DollarSign } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { signOut } from "next-auth/react";
+import { LayoutDashboard, Users, Settings, Folders, DollarSign } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SidebarNavItemProps {
@@ -34,8 +32,13 @@ function SidebarNavItem({ href, icon, title }: SidebarNavItemProps) {
 
 export function DashboardSidebar() {
   return (
-    <div className="hidden w-64 border-r bg-background lg:block">
+    <div className="hidden fixed top-0 left-0 h-screen w-64 border-r bg-background lg:block z-30">
       <div className="flex h-full max-h-screen flex-col">
+        {/* Sidebar Header - aligns with the desktop header */}
+        <div className="h-16 border-b flex items-center px-4 font-semibold">
+          Blurr.so | HR Portal
+        </div>
+        
         <ScrollArea className="flex-1">
           <div className="flex flex-col gap-2 p-4">
             <SidebarNavItem
@@ -70,17 +73,6 @@ export function DashboardSidebar() {
             />
           </div>
         </ScrollArea>
-
-        <div className="border-t p-4">
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2"
-            onClick={() => signOut({ callbackUrl: "/" })}
-          >
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </Button>
-        </div>
       </div>
     </div>
   );
