@@ -1,5 +1,4 @@
 # Update Project Plan: Remove Auth Tasks
-_Exported on 5/22/2025 at 00:53:42 GMT+3 from Cursor (0.50.5)_
 
 ---
 
